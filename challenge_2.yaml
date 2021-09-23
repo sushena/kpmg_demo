@@ -1,0 +1,27 @@
+---
+  - name: Get metadata from AWS EC2 instances
+    hosts: 127.0.0.1
+    gather_facts: no
+    remote_user: root
+    become: yes
+    become_user: root
+    vars:
+      id: "i-0d715941799ded26e"
+      ec2_region: "eu-central-1"
+
+    tasks:
+    - name: List a specific EC2 instance
+      ec2_instance_facts:
+        instance_ids: "{{ id }}"
+      register: ec2_node_info
+
+      #Give all the metadata of EC2 instances
+    - name: Instance output
+      debug:
+        #var: ec2_node_info.results
+        var: ec2_node_info.stdout_lines
+
+      #output public IP address
+    - name: Individual output to display public IP address
+      debug:
+        var: ec2_node_info.public_ip_address
